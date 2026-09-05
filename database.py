@@ -21,8 +21,21 @@ class Database:
 
         self.connection.commit()
 
+    def add_book(self , title , author , genre , publication_year , status):
+        self.cursor.execute("""
+            INSERT INTO books(title , author , genre , publication_year , status)
+            VALUES(? , ? , ? , ? , ?)""" , (title , author , genre , publication_year , status))
+        self.connection.commit()
+
+    def get_books(self):
+        self.cursor.execute("SELECT * FROM books")
+        books = self.cursor.fetchall()
+        return books
 
 db = Database()
 db.connect()
 db.create_cursor()
 db.create_table()
+db.add_book("Action" , "Miticoman" , "Fantasy" , 2022 , "done")
+
+print(db.get_books())
