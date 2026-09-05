@@ -31,11 +31,3 @@ class Database:
         self.cursor.execute("SELECT * FROM books")
         books = self.cursor.fetchall()
         return books
-
-db = Database()
-db.connect()
-db.create_cursor()
-db.create_table()
-db.add_book("Action" , "Miticoman" , "Fantasy" , 2022 , "done")
-
-print(db.get_books())
