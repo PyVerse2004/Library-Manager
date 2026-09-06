@@ -46,11 +46,18 @@ def show_books():
     print(db.get_books())
 
 
+def seacrh_books():
+    search = input("Find Your Title : ")
+    books = db.search_by_title(search)
+    print(books)
+
+
 def menu():
     while True:
         print("[1] Add Book")
         print("[2] Show Books")
-        print("[3] Exit")
+        print("[3] Search Books")
+        print("[4] Exit")
         try:
             inpt = int(input("Choose An Option:"))
             
@@ -59,6 +66,8 @@ def menu():
             elif inpt == 2:
                 show_books()
             elif inpt == 3:
+                seacrh_books()
+            elif inpt == 4:
                 print("Good Bye")
                 return 
             else:
