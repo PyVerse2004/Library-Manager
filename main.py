@@ -46,9 +46,16 @@ def show_books():
     print(db.get_books())
 
 
-def seacrh_books():
-    search = input("Find Your Title : ")
-    books = db.search_by_title(search)
+def search_books():
+    search_column = input("Search By (title , author , genre , status): ")
+
+    if search_column.lower() == "status" :
+        search_status = input("Search (unread , reading , completed) : ")
+        print(db.search_by_status(search_status.lower()))
+        return
+    
+    search_value = input(f"Find Your {search_column} : ")
+    books = db.search_books(search_column , search_value)
     print(books)
 
 
@@ -66,7 +73,7 @@ def menu():
             elif inpt == 2:
                 show_books()
             elif inpt == 3:
-                seacrh_books()
+                search_books()
             elif inpt == 4:
                 print("Good Bye")
                 return 
