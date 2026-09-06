@@ -6,16 +6,40 @@ db.create_cursor()
 db.create_table()
 
 def add_book():
-    try:
-        title = input("Enter Title: ")
-        author = input("Enter Author: ")
-        genre = input("Enter Genre: ")
-        publication_year = int(input("Enter Year: "))
-        status = input("Enter Status: ")
-        db.add_book(title , author , genre , publication_year , status)
+    while True:
+        try:
+            title = input("Enter Title: ")
+            if not title:
+                print("Please enter a value!!!")
+                return
+            
+            author = input("Enter Author: ")
+            if not author:
+                print("Please enter a value!!!")
+                return
+            
+            genre = input("Enter Genre: ")
+            if not genre:
+                print("Please enter a value!!!")
+                return
+            
+            publication_year = int(input("Enter Year: "))
+            if publication_year <= 0 :
+                print("Enter a correct year")
+                return
 
-    except ValueError:
-        print("Invalid Format")
+            status_list = ["unread" , "reading" , "completed"]
+
+            status = input("Enter Status (Unread , Reading , Completed): ")
+            if status.lower() not in status_list:
+                print("Plese Choose From Options")
+                return
+            
+            db.add_book(title , author , genre , publication_year , status.lower())
+
+        except ValueError:
+            print("Invalid Format")
+        break
 
     
 def show_books():
