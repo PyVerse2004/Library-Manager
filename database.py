@@ -31,3 +31,8 @@ class Database:
         self.cursor.execute("SELECT * FROM books")
         books = self.cursor.fetchall()
         return books
+
+    def search_by_title(self , title):
+        self.cursor.execute("SELECT * FROM books WHERE title LIKE ?" , (f"%{title}%",))
+        books = self.cursor.fetchall()
+        return books
