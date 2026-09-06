@@ -32,7 +32,24 @@ class Database:
         books = self.cursor.fetchall()
         return books
 
-    def search_by_title(self , title):
-        self.cursor.execute("SELECT * FROM books WHERE title LIKE ?" , (f"%{title}%",))
+    def search_books(self , column , value):
+        allowed_column = ["title" , "author" , "genre"]
+
+        if not column in allowed_column:
+            return []
+
+        self.cursor.execute(f"SELECT * FROM books WHERE {column} LIKE ?" , (f"%{value}%",))
+
+        books = self.cursor.fetchall()
+        return books
+
+    def search_by_status(self , status):
+        allowed_status = ["unread" , "reading" , "completed"]
+
+        if status not in allowed_status:
+            return []
+        
+        self.cursor.execute("SELECT * FROM books WHERE status = ?" , (status,))
+
         books = self.cursor.fetchall()
         return books
