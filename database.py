@@ -117,3 +117,13 @@ class Database:
         authors = self.cursor.fetchall()
 
         return authors
+
+    def author_exists(self , author_id):
+        self.cursor.execute("SELECT id FROM authors WHERE id = ?" , (author_id,))
+
+        author = self.cursor.fetchone()
+
+        if author:
+            return True
+        else:
+            return False

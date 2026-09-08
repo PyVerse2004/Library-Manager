@@ -8,6 +8,9 @@ db.create_authors_table()
 
 print(db.get_authors())
 
+print(db.author_exists(3))
+print(db.author_exists(999))
+
 def add_book():
     while True:
         try:
@@ -19,13 +22,18 @@ def add_book():
             for i in db.get_authors():
                 print(f"[{i[0]}] {i[1]}")
 
-            author = int(input("Enter Author ID: "))
-            if not author:
+            author_id = int(input("Enter Author ID: "))
+
+            if not author_id:
                 print("Please enter a value!!!")
                 return
 
-            if author <= 0 :
+            if author_id <= 0:
                 print("Invalid Format")
+                return
+
+            if not db.author_exists(author_id):
+                print("Author Not Found")
                 return
             
             genre = input("Enter Genre: ")
@@ -45,7 +53,7 @@ def add_book():
                 print("Plese Choose From Options")
                 return
             
-            db.add_book(title , author , genre , publication_year , status.lower())
+            db.add_book(title , author_id , genre , publication_year , status.lower())
 
         except ValueError:
             print("Invalid Format")
