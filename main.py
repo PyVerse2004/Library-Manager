@@ -117,13 +117,35 @@ def update_books():
     else:
         return "Book not found"
 
+
+def delete_book():
+    delete_id = int(input("Enter id you want to delete: "))
+
+    if not delete_id:
+        print("Please Enter a Value !!!")
+        return
+    
+    if delete_id <= 0 :
+        print("Invalid Format !!!")
+        return
+
+    result = db.delete_book(delete_id)
+
+    if result:
+        return "Book Successfully Deleted"
+    
+    else:
+        return "Book Not Found"
+
+
 def menu():
     while True:
         print("[1] Add Book")
         print("[2] Show Books")
-        print("[3] Search Books")
-        print("[4] Update Books")
-        print("[5] Exit")
+        print("[3] Search Book")
+        print("[4] Update Book")
+        print("[5] Delete Book")
+        print("[6] Exit")
         try:
             inpt = int(input("Choose An Option:"))
             
@@ -134,8 +156,10 @@ def menu():
             elif inpt == 3:
                 search_books()
             elif inpt == 4:
-                print(update_books())    
+                print(update_books())
             elif inpt == 5:
+               print(delete_book())    
+            elif inpt == 6:
                 print("Good Bye")
                 return 
             else:
