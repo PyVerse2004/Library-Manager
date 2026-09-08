@@ -5,8 +5,6 @@ db.connect()
 db.create_cursor()
 db.create_table()
 db.create_authors_table()
-author_id = db.add_author("George Orwell")
-print(author_id)
 
 def add_book():
     while True:
