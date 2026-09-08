@@ -1,188 +1,255 @@
 from database import Database
 
+
 db = Database()
 db.connect()
 db.create_cursor()
-db.create_table()
 db.create_authors_table()
+db.create_table()
 
-print(db.get_authors())
-
-print(db.author_exists(3))
-print(db.author_exists(999))
 
 def add_book():
-    while True:
-        try:
-            title = input("Enter Title: ")
-            if not title:
-                print("Please enter a value!!!")
-                return
-            
-            for i in db.get_authors():
-                print(f"[{i[0]}] {i[1]}")
+    try:
+        title = input("Enter Title: ").strip()
 
-            author_id = int(input("Enter Author ID: "))
+        if not title:
+            print("Please enter a value!!!")
+            return
 
-            if not author_id:
-                print("Please enter a value!!!")
-                return
+        print("\nAvailable Authors:")
+        for author in db.get_authors():
+            print(f"[{author[0]}] {author[1]}")
 
-            if author_id <= 0:
-                print("Invalid Format")
-                return
+        author_id = int(input("Enter Author ID: "))
 
-            if not db.author_exists(author_id):
-                print("Author Not Found")
-                return
-            
-            genre = input("Enter Genre: ")
-            if not genre:
-                print("Please enter a value!!!")
-                return
-            
-            publication_year = int(input("Enter Year: "))
-            if publication_year <= 0 :
-                print("Enter a correct year")
-                return
+        if author_id <= 0:
+            print("Invalid Author ID")
+            return
 
-            status_list = ["unread" , "reading" , "completed"]
+        if not db.author_exists(author_id):
+            print("Author Not Found")
+            return
 
-            status = input("Enter Status (Unread , Reading , Completed): ")
-            if status.lower() not in status_list:
-                print("Plese Choose From Options")
-                return
-            
-            db.add_book(title , author_id , genre , publication_year , status.lower())
+        genre = input("Enter Genre: ").strip()
 
-        except ValueError:
-            print("Invalid Format")
-        break
+        if not genre:
+            print("Please enter a value!!!")
+            return
 
-    
+        publication_year = int(input("Enter Year: "))
+
+        if publication_year <= 0:
+            print("Enter a correct year")
+            return
+
+        status_list = ["unread", "reading", "completed"]
+
+        status = input(
+            "Enter Status (Unread, Reading, Completed): "
+        ).lower()
+
+        if status not in status_list:
+            print("Please choose from the available options")
+            return
+
+        db.add_book(
+            title,
+            author_id,
+            genre,
+            publication_year,
+            status
+        )
+
+        print("Book successfully added!")
+
+    except ValueError:
+        print("Invalid Format")
+
+
 def show_books():
-    print(db.get_books())
+    books = db.get_books()
+
+    if not books:
+        print("No books found.")
+        return
+
+    for book in books:
+        print(book)
 
 
 def search_books():
-    search_column = input("Search By (title , author , genre , status): ")
+    search_column = input(
+        "Search By (title, author, genre, status): "
+    ).lower()
 
-    if search_column.lower() == "status" :
-        search_status = input("Search (unread , reading , completed) : ")
-        print(db.search_by_status(search_status.lower()))
-        return
-    
-    search_value = input(f"Find Your {search_column} : ")
-    books = db.search_books(search_column , search_value)
-    print(books)
+    if search_column == "status":
+        search_status = input(
+            "Search (unread, reading, completed): "
+        ).lower()
 
+        books = db.search_by_status(search_status)
 
-def update_books():
-    updt_column = input(
-        "Choose For Update (title , author , genre , publication_year , status) : "
-    )
+    elif search_column in ["title", "author", "genre"]:
+        search_value = input(
+            f"Find Your {search_column}: "
+        ).strip()
 
-    if not updt_column:
-        print("Please enter a value !!!")
-        return
-
-    select_id = int(input("Enter Id You Want : "))
-
-    if not select_id:
-        print("Please enter a value !!!")
-        return
-
-    if select_id <= 0:
-        print("Invalid Format")
-        return
-
-    if updt_column.lower() == "status":
-        allowed_value = ["unread", "reading", "completed"]
-
-        updt_status = input(
-            "Update (unread , reading , completed) : "
+        books = db.search_books(
+            search_column,
+            search_value
         )
 
-        if updt_status.lower() not in allowed_value:
-            print("Enter a valid status !!!")
+    else:
+        print("Invalid Search Option")
+        return
+
+    if not books:
+        print("No books found.")
+        return
+
+    for book in books:
+        print(book)
+
+
+def update_book():
+    try:
+        column = input(
+            "Choose For Update "
+            "(title, author, genre, publication_year, status): "
+        ).lower()
+
+        allowed_columns = [
+            "title",
+            "author",
+            "genre",
+            "publication_year",
+            "status"
+        ]
+
+        if column not in allowed_columns:
+            print("Invalid Column")
             return
 
+        book_id = int(input("Enter ID You Want: "))
+
+        if book_id <= 0:
+            print("Invalid ID")
+            return
+
+        if column == "status":
+            allowed_status = [
+                "unread",
+                "reading",
+                "completed"
+            ]
+
+            value = input(
+                "Update (unread, reading, completed): "
+            ).lower()
+
+            if value not in allowed_status:
+                print("Invalid Status")
+                return
+
+        else:
+            value = input("Update Your Value: ").strip()
+
+            if not value:
+                print("Please enter a value!!!")
+                return
+
         result = db.update_book(
-            select_id,
-            updt_column.lower(),
-            updt_status.lower()
+            book_id,
+            column,
+            value
         )
 
         if result:
-            return "Book updated successfully"
+            print("Book successfully updated!")
         else:
-            return "Book not found"
+            print("Book Not Found")
 
-    uptd_value = input("Update Your Value : ")
-
-    if not uptd_value:
-        print("Please enter a value !!!")
-        return
-
-    result = db.update_book(
-        select_id,
-        updt_column.lower(),
-        uptd_value
-    )
-
-    if result:
-        return "Book updated successfully"
-    else:
-        return "Book not found"
+    except ValueError:
+        print("Invalid Format")
 
 
 def delete_book():
-    delete_id = int(input("Enter id you want to delete: "))
+    try:
+        book_id = int(
+            input("Enter ID You Want To Delete: ")
+        )
 
-    if not delete_id:
-        print("Please Enter a Value !!!")
+        if book_id <= 0:
+            print("Invalid ID")
+            return
+
+        result = db.delete_book(book_id)
+
+        if result:
+            print("Book Successfully Deleted")
+        else:
+            print("Book Not Found")
+
+    except ValueError:
+        print("Invalid Format")
+
+
+def add_author():
+    author_name = input("Enter Author: ").strip()
+
+    if not author_name:
+        print("Please enter a value!!!")
         return
-    
-    if delete_id <= 0 :
-        print("Invalid Format !!!")
-        return
 
-    result = db.delete_book(delete_id)
+    author_id = db.add_author(author_name)
 
-    if result:
-        return "Book Successfully Deleted"
-    
-    else:
-        return "Book Not Found"
+    print(
+        f"Author successfully added! "
+        f"ID: {author_id}"
+    )
 
 
 def menu():
     while True:
+        print("\n===== Personal Library Manager =====")
         print("[1] Add Book")
         print("[2] Show Books")
         print("[3] Search Book")
         print("[4] Update Book")
         print("[5] Delete Book")
-        print("[6] Exit")
+        print("[6] Add Author")
+        print("[7] Exit")
+
         try:
-            inpt = int(input("Choose An Option:"))
-            
-            if inpt == 1:
+            choice = int(input("Choose An Option: "))
+
+            if choice == 1:
                 add_book()
-            elif inpt == 2:
+
+            elif choice == 2:
                 show_books()
-            elif inpt == 3:
+
+            elif choice == 3:
                 search_books()
-            elif inpt == 4:
-                print(update_books())
-            elif inpt == 5:
-               print(delete_book())    
-            elif inpt == 6:
+
+            elif choice == 4:
+                update_book()
+
+            elif choice == 5:
+                delete_book()
+
+            elif choice == 6:
+                add_author()
+
+            elif choice == 7:
                 print("Good Bye")
-                return 
+                break
+
             else:
                 print("Please Enter A Valid Number")
 
         except ValueError:
             print("Invalid Format")
+
+
 menu()
