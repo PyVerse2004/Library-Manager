@@ -42,7 +42,7 @@ class Database:
             JOIN authors
             ON books.author_id = authors.id
         """)
-    
+
         books = self.cursor.fetchall()
         return books
 
@@ -111,3 +111,9 @@ class Database:
 
         return self.cursor.lastrowid
 
+    def get_authors(self):
+        self.cursor.execute("SELECT id , name FROM authors")
+
+        authors = self.cursor.fetchall()
+
+        return authors
