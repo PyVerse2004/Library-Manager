@@ -6,6 +6,7 @@ class Database:
 
     def create_cursor(self):
         self.cursor = self.connection.cursor()
+        self.cursor.execute("PRAGMA foreign_keys = ON")
 
     def create_table(self):
         self.cursor.execute("""
@@ -13,6 +14,7 @@ class Database:
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT,
             author_id INTEGER,
+            FOREIGN KEY (author_id) REFERENCES authors(id),
             genre TEXT,
             publication_year INTEGER,
             status TEXT
@@ -21,10 +23,10 @@ class Database:
 
         self.connection.commit()
 
-    def add_book(self , title , author , genre , publication_year , status):
+    def add_book(self , title , author_id , genre , publication_year , status):
         self.cursor.execute("""
-            INSERT INTO books(title , author , genre , publication_year , status)
-            VALUES(? , ? , ? , ? , ?)""" , (title , author , genre , publication_year , status))
+            INSERT INTO books(title , author_id , genre , publication_year , status)
+            VALUES(? , ? , ? , ? , ?)""" , (title , author_id , genre , publication_year , status))
         self.connection.commit()
 
     def get_books(self):

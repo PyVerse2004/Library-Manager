@@ -5,7 +5,8 @@ db.connect()
 db.create_cursor()
 db.create_table()
 db.create_authors_table()
-print(db.add_author("Gorge"))
+author_id = db.add_author("George Orwell")
+print(author_id)
 
 def add_book():
     while True:
@@ -15,9 +16,13 @@ def add_book():
                 print("Please enter a value!!!")
                 return
             
-            author = input("Enter Author: ")
+            author = int(input("Enter Author ID: "))
             if not author:
                 print("Please enter a value!!!")
+                return
+
+            if author <= 0 :
+                print("Invalid Format")
                 return
             
             genre = input("Enter Genre: ")
