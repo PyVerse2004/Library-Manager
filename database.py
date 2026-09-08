@@ -14,10 +14,10 @@ class Database:
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT,
             author_id INTEGER,
-            FOREIGN KEY (author_id) REFERENCES authors(id),
             genre TEXT,
             publication_year INTEGER,
-            status TEXT
+            status TEXT,
+            FOREIGN KEY (author_id) REFERENCES authors(id)
                 )
         """)
 
@@ -30,7 +30,19 @@ class Database:
         self.connection.commit()
 
     def get_books(self):
-        self.cursor.execute("SELECT * FROM books")
+        self.cursor.execute("""
+            SELECT
+                books.id,
+                books.title,
+                authors.name,
+                books.genre,
+                books.publication_year,
+                books.status
+            FROM books
+            JOIN authors
+            ON books.author_id = authors.id
+        """)
+    
         books = self.cursor.fetchall()
         return books
 
