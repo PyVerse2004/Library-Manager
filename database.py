@@ -77,3 +77,13 @@ class Database:
         if self.cursor.rowcount == 0:
             return False
         return True
+
+    def create_authors_table(self):
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS authors (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT
+            )
+        """)
+    
+        self.connection.commit()

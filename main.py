@@ -4,6 +4,7 @@ db = Database()
 db.connect()
 db.create_cursor()
 db.create_table()
+db.create_authors_table()
 
 def add_book():
     while True:
