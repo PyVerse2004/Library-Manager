@@ -58,12 +58,64 @@ def search_books():
     books = db.search_books(search_column , search_value)
     print(books)
 
+
 def update_books():
-    updt_column = input("Choose For Update (title , author , genre , publication_year , status) : ")
+    updt_column = input(
+        "Choose For Update (title , author , genre , publication_year , status) : "
+    )
+
+    if not updt_column:
+        print("Please enter a value !!!")
+        return
+
     select_id = int(input("Enter Id You Want : "))
+
+    if not select_id:
+        print("Please enter a value !!!")
+        return
+
+    if select_id <= 0:
+        print("Invalid Format")
+        return
+
+    if updt_column.lower() == "status":
+        allowed_value = ["unread", "reading", "completed"]
+
+        updt_status = input(
+            "Update (unread , reading , completed) : "
+        )
+
+        if updt_status.lower() not in allowed_value:
+            print("Enter a valid status !!!")
+            return
+
+        result = db.update_book(
+            select_id,
+            updt_column.lower(),
+            updt_status.lower()
+        )
+
+        if result:
+            return "Book updated successfully"
+        else:
+            return "Book not found"
+
     uptd_value = input("Update Your Value : ")
 
-    db.uptade_books(select_id , updt_column , uptd_value)
+    if not uptd_value:
+        print("Please enter a value !!!")
+        return
+
+    result = db.update_book(
+        select_id,
+        updt_column.lower(),
+        uptd_value
+    )
+
+    if result:
+        return "Book updated successfully"
+    else:
+        return "Book not found"
 
 def menu():
     while True:
@@ -82,7 +134,7 @@ def menu():
             elif inpt == 3:
                 search_books()
             elif inpt == 4:
-                update_books()    
+                print(update_books())    
             elif inpt == 5:
                 print("Good Bye")
                 return 
