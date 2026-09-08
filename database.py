@@ -55,7 +55,6 @@ class Database:
         return books
 
     def update_book(self , book_id , column , value):
-
         allowed_culomns = ["title" , "author" , "genre" , "publication_year" , "status"]
 
         if column not in allowed_culomns:
@@ -68,4 +67,13 @@ class Database:
         if self.cursor.rowcount == 0:
             return False
         
+        return True
+
+    def delete_book(self , book_id):
+        self.cursor.execute("DELETE FROM books WHERE id = ?" , (book_id,))
+
+        self.connection.commit()
+
+        if self.cursor.rowcount == 0:
+            return False
         return True
