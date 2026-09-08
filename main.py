@@ -5,6 +5,7 @@ db.connect()
 db.create_cursor()
 db.create_table()
 db.create_authors_table()
+print(db.add_author("Gorge"))
 
 def add_book():
     while True:

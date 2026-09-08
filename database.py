@@ -12,7 +12,7 @@ class Database:
             CREATE TABLE IF NOT EXISTS books (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT,
-            author TEXT,
+            author_id INTEGER,
             genre TEXT,
             publication_year INTEGER,
             status TEXT
@@ -85,5 +85,15 @@ class Database:
                 name TEXT
             )
         """)
-    
+
         self.connection.commit()
+
+    def add_author(self , author):
+        self.cursor.execute("""
+            INSERT INTO authors (name)
+            VALUES(?)""" , (author,))
+        
+        self.connection.commit()
+
+        return self.cursor.lastrowid
+
