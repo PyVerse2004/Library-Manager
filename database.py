@@ -54,14 +54,18 @@ class Database:
         books = self.cursor.fetchall()
         return books
 
-    def uptade_books(self , book_id , column , value):
+    def update_book(self , book_id , column , value):
 
-        allowed_culomn = ["title" , "author" , "genre" , "publication_year" , "status"]
+        allowed_culomns = ["title" , "author" , "genre" , "publication_year" , "status"]
 
-        if column not in allowed_culomn:
+        if column not in allowed_culomns:
             return []
 
         self.cursor.execute(f"UPDATE books SET {column} = ? WHERE id = ?" , (value , book_id))
 
-        self.cursor.fetchall()
         self.connection.commit()
+
+        if self.cursor.rowcount == 0:
+            return False
+        
+        return True
