@@ -58,13 +58,20 @@ def search_books():
     books = db.search_books(search_column , search_value)
     print(books)
 
+def update_books():
+    updt_column = input("Choose For Update (title , author , genre , publication_year , status) : ")
+    select_id = int(input("Enter Id You Want : "))
+    uptd_value = input("Update Your Value : ")
+
+    db.uptade_books(select_id , updt_column , uptd_value)
 
 def menu():
     while True:
         print("[1] Add Book")
         print("[2] Show Books")
         print("[3] Search Books")
-        print("[4] Exit")
+        print("[4] Update Books")
+        print("[5] Exit")
         try:
             inpt = int(input("Choose An Option:"))
             
@@ -75,6 +82,8 @@ def menu():
             elif inpt == 3:
                 search_books()
             elif inpt == 4:
+                update_books()    
+            elif inpt == 5:
                 print("Good Bye")
                 return 
             else:
