@@ -6,6 +6,8 @@ db.create_cursor()
 db.create_table()
 db.create_authors_table()
 
+print(db.get_authors())
+
 def add_book():
     while True:
         try:
@@ -14,6 +16,9 @@ def add_book():
                 print("Please enter a value!!!")
                 return
             
+            for i in db.get_authors():
+                print(f"[{i[0]}] {i[1]}")
+
             author = int(input("Enter Author ID: "))
             if not author:
                 print("Please enter a value!!!")
