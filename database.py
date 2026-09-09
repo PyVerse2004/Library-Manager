@@ -46,14 +46,56 @@ class Database:
         books = self.cursor.fetchall()
         return books
 
-    def search_books(self , column , value):
-        allowed_column = ["title" , "author" , "genre"]
+    def search_books(self, column, value):
 
-        if not column in allowed_column:
+        if column == "title":
+            self.cursor.execute("""
+                SELECT
+                    books.id,
+                    books.title,
+                    authors.name,
+                    books.genre,
+                    books.publication_year,
+                    books.status
+                FROM books
+                JOIN authors
+                ON books.author_id = authors.id
+                WHERE books.title LIKE ?
+            """, (f"%{value}%",))
+    
+        elif column == "genre":
+            self.cursor.execute("""
+                SELECT
+                    books.id,
+                    books.title,
+                    authors.name,
+                    books.genre,
+                    books.publication_year,
+                    books.status
+                FROM books
+                JOIN authors
+                ON books.author_id = authors.id
+                WHERE books.genre LIKE ?
+            """, (f"%{value}%",))
+    
+        elif column == "author":
+            self.cursor.execute("""
+                SELECT
+                    books.id,
+                    books.title,
+                    authors.name,
+                    books.genre,
+                    books.publication_year,
+                    books.status
+                FROM books
+                JOIN authors
+                ON books.author_id = authors.id
+                WHERE authors.name LIKE ?
+            """, (f"%{value}%",))
+    
+        else:
             return []
-
-        self.cursor.execute(f"SELECT * FROM books WHERE {column} LIKE ?" , (f"%{value}%",))
-
+    
         books = self.cursor.fetchall()
         return books
 
