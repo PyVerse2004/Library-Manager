@@ -69,7 +69,7 @@ class Database:
         return books
 
     def update_book(self , book_id , column , value):
-        allowed_culomns = ["title" , "author" , "genre" , "publication_year" , "status"]
+        allowed_culomns = ["title" , "author_id" , "genre" , "publication_year" , "status"]
 
         if column not in allowed_culomns:
             return []
