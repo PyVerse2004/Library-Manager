@@ -143,13 +143,42 @@ def update_book():
                 "completed"
             ]
 
-            value = input(
-                "Update (unread, reading, completed): "
-            ).lower()
+            value = input("Update (unread, reading, completed): ").lower()
+
 
             if value not in allowed_status:
                 print("Invalid Status")
                 return
+            
+            db.update_book(book_id , column , value)
+            return
+
+        if column == "author":
+            author = input("Update your author: ")
+        
+            author_id = None
+        
+            for i in db.get_authors():
+                if author == i[1]:
+                    author_id = i[0]
+                    break
+                
+            if author_id is None:
+                print("Author Not Found")
+                return
+        
+            result = db.update_book(
+                book_id,
+                "author_id",
+                author_id
+            )
+        
+            if result:
+                print("Author Successfully Updated")
+            else:
+                print("Book Not Found")
+        
+            return
 
         else:
             value = input("Update Your Value: ").strip()
