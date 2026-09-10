@@ -169,3 +169,21 @@ class Database:
             return True
         else:
             return False
+
+def get_book_by_id(self, book_id):
+    self.cursor.execute("""
+        SELECT
+            books.id,
+            books.title,
+            authors.name,
+            books.genre,
+            books.publication_year,
+            books.status
+        FROM books
+        JOIN authors
+        ON books.author_id = authors.id
+        WHERE books.id = ?
+    """, (book_id,))
+
+    book = self.cursor.fetchone()
+    return book
