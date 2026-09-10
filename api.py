@@ -30,6 +30,29 @@ def create_book(book : Book):
     )
     return book
 
-@app.get("/books")
+
+class BookResponse(BaseModel):
+    id: int
+    title: str
+    author: str
+    genre: str
+    publication_year: int
+    status: str
+
+@app.get("/books", response_model=list[BookResponse])
 def get_books():
-    return db.get_books()
+    books = db.get_books()
+
+    result = []
+
+    for book in books:
+        result.append({
+            "id": book[0],
+            "title": book[1],
+            "author": book[2],
+            "genre": book[3],
+            "publication_year": book[4],
+            "status": book[5]
+        })
+    print(result)
+    return result
