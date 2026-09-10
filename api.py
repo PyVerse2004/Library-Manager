@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI , HTTPException
 from pydantic import BaseModel
 from database import Database
 
@@ -56,3 +56,23 @@ def get_books():
         })
     print(result)
     return result
+
+@app.get("/books/{book_id}", response_model=BookResponse)
+def get_book(book_id: int):
+
+    book = db.get_book_by_id(book_id)
+
+    if book is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Book not found"
+        )
+
+    return {
+        "id": book[0],
+        "title": book[1],
+        "author": book[2],
+        "genre": book[3],
+        "publication_year": book[4],
+        "status": book[5]
+    }
