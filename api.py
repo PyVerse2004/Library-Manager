@@ -21,6 +21,13 @@ class Book(BaseModel):
 
 @app.post("/books")
 def create_book(book : Book):
+
+    if not db.author_exists(book.author_id):
+        raise HTTPException(
+            status_code=404,
+            detail="Author not found"
+        )
+
     db.add_book(
         book.title,
         book.author_id,
